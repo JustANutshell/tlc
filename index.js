@@ -3,9 +3,10 @@ standard_input.setEncoding('utf-8');
 
 var tlc=require("./tlc.js");
 var test=new tlc({ // pins
+	// HIER MUSS MAN DIE PINS ÄNDERN HIER MUSS MAN DIE PINS ÄNDERN HIER MUSS MAN DIE PINS ÄNDERN HIER MUSS MAN DIE PINS ÄNDERN HIER MUSS MAN DIE PINS ÄNDERN HIER MUSS MAN DIE PINS ÄNDERN
 	// red,yellow,green
-	"A":[1,2,3],
-	"B":[4,5,6],
+	"A":[1,2,3], // <-- hier für ampel a
+	"B":[4,5,6], // <-- hier für ampel b
 },{ // Zustäde
 	0:[0],   // red
 	1:[0,1], // red & yellow
