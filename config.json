@@ -1,0 +1,7 @@
+{
+	"comment": "HIER MUSS MAN DIE PINS ÄNDERN (rot,gelb,grün)  pinlayout gibt es hier: http://dangerousprototypes.com/blog/wp-content/media/2018/05/Raspberry-GPIO.jpg",
+	"pins": {
+		"A": [1, 2, 3],
+		"B": [4, 5, 6]
+	}
+}

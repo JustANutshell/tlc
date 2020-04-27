@@ -1,14 +1,20 @@
+if (( $EUID != 0 )); then
+  echo "Please run this script as root"
+  echo "write 'sudo bash ./install.sh'"
+  exit
+fi
 sudo apt-get update
-sudo apt-get dist-upgrade
+sudo apt-get upgrade
 if ! [ -x "$(command -v node)" ]; then
   echo 'node is not installed: installing'
   curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
   sudo apt-get install -y nodejs
 fi
-echo "`node -v`"
-echo "`npm -v`"
 sudo npm i
+npm install -g typescript
+echo "node: `node -v`"
+echo "npm:  `npm -v`"
 echo "----------------------------------------------------------------------------------------------------------"
 echo "to start tlc, type: 'sudo node index'"
 echo "to update, run: 'sudo bash ./update.sh'"
-echo "make sure to change the pin numbers in the file index.js with the command 'nano ./index.js' (strg+x -> y -> ent to save)"
+echo "make sure to change the pin numbers in the file index.js with the command 'nano ./config.json' (to save: strg+x -> y -> ent)"
