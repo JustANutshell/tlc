@@ -13,13 +13,24 @@ export class tlc{
 	private actualStateId	:number										=0;
 	private cachedPinData	:{[key:number]:boolean}						={};
 	private actuInterval	:NodeJS.Timeout|null						=null;
+	private usePins			:boolean									=true;
 
-	constructor(pins:{[key:string]:number[]},zustande:{[key:string]:number[]},phasen:{data:{[key:string]:string},time:number}[],cmdInput:NodeJS.ReadStream|null){
+	constructor(pins:{[key:string]:number[]},zustande:{[key:string]:number[]},phasen:{data:{[key:string]:string},time:number}[],cmdInput:NodeJS.ReadStream|null,usePins:boolean=true){
 		this.pins				=pins;
 		this.zustande			=zustande;
 		this.phasen				=phasen;
 		this.actualStateSince	=new Date();
+		this.usePins			=usePins;
 
+		if(this.usePins&&isRPi){
+			console.log("This is an raspberry pi, pins will be used");
+		}else if(this.usePins&&!isRPi){
+			console.log("This is not an raspberry pi, pins CANT be used");
+		}else if(!this.usePins&&isRPi){
+			console.log("This is an raspberry pi, pins could be used, but were disabled");
+		}else{
+			console.log("This is not an raspberry pi, pins can't and won't be used");
+		}
 		var x=this;
 		if(cmdInput!==null){
 			console.log("to stop, type 'stop'\n\n");
@@ -32,7 +43,7 @@ export class tlc{
 		var a=Object.keys(this.pins);
 		for(var b=0;b<a.length;b++){
 			for(var c=0;c<this.pins[a[b]].length;c++){
-				if(isRPi){
+				if(isRPi&&this.usePins){
 					await gpiop.setup(this.pins[a[b]][c],gpio.DIR_OUT);
 				}
 			}
@@ -57,7 +68,7 @@ export class tlc{
 		var a=Object.keys(this.pins);
 		for(var b=0;b<a.length;b++){
 			for(var c=0;c<this.pins[a[b]].length;c++){
-				if(isRPi){
+				if(isRPi&&this.usePins){
 					await gpiop.setup(this.pins[a[b]][c],gpio.DIR_OUT);
 				}
 			}
@@ -92,7 +103,7 @@ export class tlc{
 			if(pinsToSet[c]!==this.cachedPinData[c]){
 				debugChangedPins=debugChangedPins+a[b]+":"+(pinsToSet[c]?"true ":"false")+" ";
 
-				if(isRPi) await gpiop.write(c,pinsToSet[c]);
+				if(isRPi&&this.usePins) await gpiop.write(c,pinsToSet[c]);
 
 				this.cachedPinData[c]=pinsToSet[c];
 			}

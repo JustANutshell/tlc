@@ -43,14 +43,29 @@ if (isRPi) {
 }
 console.log("\nrunning " + (isRPi ? "" : "not ") + "on raspberrypi\n");
 var tlc = /** @class */ (function () {
-    function tlc(pins, zustande, phasen, cmdInput) {
+    function tlc(pins, zustande, phasen, cmdInput, usePins) {
+        if (usePins === void 0) { usePins = true; }
         this.actualStateId = 0;
         this.cachedPinData = {};
         this.actuInterval = null;
+        this.usePins = true;
         this.pins = pins;
         this.zustande = zustande;
         this.phasen = phasen;
         this.actualStateSince = new Date();
+        this.usePins = usePins;
+        if (this.usePins && isRPi) {
+            console.log("This is an raspberry pi, pins will be used");
+        }
+        else if (this.usePins && !isRPi) {
+            console.log("This is not an raspberry pi, pins CANT be used");
+        }
+        else if (!this.usePins && isRPi) {
+            console.log("This is an raspberry pi, pins could be used, but were disabled");
+        }
+        else {
+            console.log("This is not an raspberry pi, pins can't and won't be used");
+        }
         var x = this;
         if (cmdInput !== null) {
             console.log("to stop, type 'stop'\n\n");
@@ -74,7 +89,7 @@ var tlc = /** @class */ (function () {
                         _a.label = 2;
                     case 2:
                         if (!(c < this.pins[a[b]].length)) return [3 /*break*/, 5];
-                        if (!isRPi) return [3 /*break*/, 4];
+                        if (!(isRPi && this.usePins)) return [3 /*break*/, 4];
                         return [4 /*yield*/, gpiop.setup(this.pins[a[b]][c], gpio.DIR_OUT)];
                     case 3:
                         _a.sent();
@@ -136,7 +151,7 @@ var tlc = /** @class */ (function () {
                         _a.label = 2;
                     case 2:
                         if (!(c < this.pins[a[b]].length)) return [3 /*break*/, 5];
-                        if (!isRPi) return [3 /*break*/, 4];
+                        if (!(isRPi && this.usePins)) return [3 /*break*/, 4];
                         return [4 /*yield*/, gpiop.setup(this.pins[a[b]][c], gpio.DIR_OUT)];
                     case 3:
                         _a.sent();
@@ -192,7 +207,7 @@ var tlc = /** @class */ (function () {
                         c_1 = Number(a[b]);
                         if (!(pinsToSet[c_1] !== this.cachedPinData[c_1])) return [3 /*break*/, 4];
                         debugChangedPins = debugChangedPins + a[b] + ":" + (pinsToSet[c_1] ? "true " : "false") + " ";
-                        if (!isRPi) return [3 /*break*/, 3];
+                        if (!(isRPi && this.usePins)) return [3 /*break*/, 3];
                         return [4 /*yield*/, gpiop.write(c_1, pinsToSet[c_1])];
                     case 2:
                         _a.sent();

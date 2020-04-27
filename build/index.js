@@ -56,7 +56,7 @@ var test = new tlc.tlc(config.pins, {
     { data: { "A": "re", "B": "ry" }, time: 500 },
     { data: { "A": "re", "B": "gr" }, time: 2000 },
     { data: { "A": "re", "B": "ye" }, time: 1000 },
-], cmdInput);
+], cmdInput, config.usePins);
 (function () {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {

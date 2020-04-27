@@ -7,6 +7,7 @@ export declare class tlc {
     private actualStateId;
     private cachedPinData;
     private actuInterval;
+    private usePins;
     constructor(pins: {
         [key: string]: number[];
     }, zustande: {
@@ -16,7 +17,7 @@ export declare class tlc {
             [key: string]: string;
         };
         time: number;
-    }[], cmdInput: NodeJS.ReadStream | null);
+    }[], cmdInput: NodeJS.ReadStream | null, usePins?: boolean);
     init(): Promise<void>;
     cmd(data: string): Promise<void>;
     stop(): Promise<void>;
