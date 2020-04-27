@@ -19,6 +19,7 @@
   "homepage": "https://github.com/JustANutshell/tlc#readme",
   "dependencies": {
     "@types/node": "^13.13.4",
+    "colors": "^1.4.0",
     "detect-rpi": "^1.4.0",
     "rpi-gpio": "^2.1.5"
   }

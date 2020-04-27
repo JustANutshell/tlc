@@ -10,6 +10,8 @@ if ! [ -x "$(command -v node)" ]; then
   curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
   sudo apt-get install -y nodejs
 fi
+sudo -rf node_modules/
+sudo -rf package-lock.json
 sudo npm i
 npm install -g typescript
 echo "node: `node -v`"
