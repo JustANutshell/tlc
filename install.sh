@@ -15,6 +15,6 @@ npm install -g typescript
 echo "node: `node -v`"
 echo "npm:  `npm -v`"
 echo "----------------------------------------------------------------------------------------------------------"
-echo "to start tlc, type: 'sudo node index'"
+echo "to start tlc, type: 'sudo node build/index' or 'sudo npm start'"
 echo "to update, run: 'sudo bash ./update.sh'"
-echo "make sure to change the pin numbers in the file config.json with the command 'nano ./config.json' (to save: strg+x -> y -> ent)"
+echo "make sure to change the pin numbers in the file config.json with the command 'sudo nano ./config.json' (to save: strg+x -> y -> ent)"

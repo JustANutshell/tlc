@@ -22,3 +22,6 @@ var test = new tlc.tlc(config.pins, { // Zustäde
 	{ data: { "A": "re", "B": "gr" }, time: 2000 },
 	{ data: { "A": "re", "B": "ye" }, time: 1000 },
 ], cmdInput);
+(async function(){
+	await test.init();
+})();
