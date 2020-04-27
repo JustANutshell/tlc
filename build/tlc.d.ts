@@ -17,6 +17,8 @@ export declare class tlc {
         };
         time: number;
     }[], cmdInput: NodeJS.ReadStream | null);
-    cmd(data: string): void;
-    actu(): void;
+    init(): Promise<void>;
+    cmd(data: string): Promise<void>;
+    stop(): Promise<void>;
+    actu(): Promise<void>;
 }
