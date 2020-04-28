@@ -6,26 +6,10 @@ const path = require("path");
 (async function () {
     let cmdInput = process.stdin;
     cmdInput.setEncoding('utf-8');
-    let a = await Promise.all([
-        new Promise(function (resolve, reject) {
-            fs.readFile(path.join(__dirname, '../asciiArt.txt'), 'utf8', function (error, data) {
-                if (error !== null)
-                    reject(error);
-                console.log(data);
-                resolve();
-                // http://www.patorjk.com/software/taag/#p=display&f=Small&t=TrafficLightControl
-            });
-        }),
-        new Promise(function (resolve, reject) {
-            fs.readFile(path.join(__dirname, '../config.json'), 'utf8', function (error, data) {
-                if (error !== null)
-                    reject(error);
-                resolve(JSON.parse(data));
-            });
-        }),
-    ]);
-    let config = Object(a[1]);
-    let test = new tlc.tlc(config.pins, {
+    let config = JSON.parse(fs.readFileSync(path.join(__dirname, '../config.json'), 'utf8'));
+    let test = new tlc.tlc(config.pins, [
+        "red", "yellow", "green"
+    ], {
         "re": [0],
         "ry": [0, 1],
         "gr": [2],

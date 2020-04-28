@@ -7,8 +7,14 @@ if (isRPi) {
     var gpio = require('rpi-gpio');
     var gpiop = gpio.promise;
 }
+console.info(colors.red(" _____          __  __ _   ") + colors.yellow(" _    _      _   _  ") + colors.green("  ___         _           _ ") + "\n" +
+    colors.red("|_   _| _ __ _ / _|/ _(_)__") + colors.yellow("| |  (_)__ _| |_| |_") + colors.green(" / __|___ _ _| |_ _ _ ___| |") + "\n" +
+    colors.red("  | || '_/ _` |  _|  _| / _") + colors.yellow("| |__| / _` | ' \\  _|") + colors.green(" (__/ _ \\ ' \\  _| '_/ _ \\ |") + "\n" +
+    colors.red("  |_||_| \\__,_|_| |_| |_\\__") + colors.yellow("|____|_\\__, |_||_\\__|") + colors.green("\\___\\___/_||_\\__|_| \\___/_|") + "\n" +
+    colors.red("                           ") + colors.yellow("       |___/        ") + colors.green("                            "));
+// http://www.patorjk.com/software/taag/#p=display&f=Small&t=TrafficLightControl
 class tlc {
-    constructor(pins, zustande, phasen, cmdInput, usePins = true) {
+    constructor(pins, pinNames, zustande, phasen, cmdInput, usePins = true) {
         this.actualStateId = 0;
         this.cachedPinData = {};
         this.actuInterval = null;
@@ -18,6 +24,7 @@ class tlc {
         this.phasen = phasen;
         this.actualStateSince = new Date();
         this.usePins = usePins;
+        this.pinNames = pinNames;
         console.log("");
         if (this.usePins && isRPi) {
             console.log("This is an raspberry pi, pins will be used");
@@ -103,33 +110,31 @@ class tlc {
             this.actualStateSince = new Date(); // set new start time
             console.log("New phase:", this.actualStateId, this.actualStateSince);
         }
+        let debugChangedPins = "";
+        let anythingChanged = false;
         let a = Object.keys(this.pins);
         for (let b = 0; b < a.length; b++) { // for every traffic light
+            debugChangedPins = debugChangedPins + a[b] + ":";
+            let thisPinsStatus = [];
             for (let c = 0; c < this.pins[a[b]].length; c++) { // for every pin
-                pinsToSet[this.pins[a[b]][c]] = false; // set low
+                thisPinsStatus[c] = false; // set low
             }
             let d = this.zustande[this.phasen[this.actualStateId].data[a[b]]]; // the active zustand for this traffic light
             for (let e = 0; e < d.length; e++) {
-                pinsToSet[this.pins[a[b]][d[e]]] = true;
+                thisPinsStatus[d[e]] = true;
             }
-        }
-        let debugChangedPins = "";
-        let anythingChanged = false;
-        a = Object.keys(pinsToSet);
-        for (let b = 0; b < a.length; b++) {
-            let c = Number(a[b]);
-            debugChangedPins = debugChangedPins + a[b] + ":";
-            if (pinsToSet[c] !== this.cachedPinData[c]) {
-                anythingChanged = true;
-                debugChangedPins = debugChangedPins + colors.brightRed(pinsToSet[c] ? "true " : "false");
-                if (isRPi && this.usePins)
-                    await gpiop.write(c, pinsToSet[c]);
-                this.cachedPinData[c] = pinsToSet[c];
+            for (let c = 0; c < this.pins[a[b]].length; c++) { // for every pin
+                let d = thisPinsStatus[c] ? "true " : "false";
+                if (thisPinsStatus[c] !== this.cachedPinData[this.pins[a[b]][c]]) {
+                    d = colors.brightRed(d);
+                    if (isRPi && this.usePins)
+                        await gpiop.write(this.pins[a[b]][c], thisPinsStatus[c]);
+                    this.cachedPinData[this.pins[a[b]][c]] = thisPinsStatus[c];
+                    anythingChanged = true;
+                }
+                debugChangedPins = debugChangedPins + " " + this.pinNames[c] + "(" + this.pins[a[b]][c] + "):" + d;
             }
-            else {
-                debugChangedPins = debugChangedPins + (pinsToSet[c] ? "true " : "false");
-            }
-            debugChangedPins = debugChangedPins + " ";
+            debugChangedPins = debugChangedPins + " | ";
         }
         if (debugChangedPins !== "" && anythingChanged)
             console.log(debugChangedPins);

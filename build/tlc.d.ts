@@ -8,9 +8,10 @@ export declare class tlc {
     private cachedPinData;
     private actuInterval;
     private usePins;
+    private pinNames;
     constructor(pins: {
         [key: string]: number[];
-    }, zustande: {
+    }, pinNames: string[], zustande: {
         [key: string]: number[];
     }, phasen: {
         data: {
